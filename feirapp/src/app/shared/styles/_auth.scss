@@ -1,0 +1,109 @@
+// Shared styles for Auth screens (Login / Register)
+// Variables, mixins and base classes to ensure consistent styling
+
+$feir-primary: #6c63ff; // modern purple-blue
+$feir-primary-dark: #574bdb;
+$feir-bg-start: #f6f7ff;
+$feir-bg-end: #eef2ff;
+$feir-text: #574bdb;
+$card-radius: 14px;
+$card-shadow: 0 8px 24px rgba(108, 99, 255, 0.08);
+$input-bg: #ffffff;
+$input-border: rgba(108, 99, 255, 0.06);
+
+// Reusable transition
+@mixin smooth-transition($props...) {
+  transition: $props 180ms cubic-bezier(.2,.9,.3,1);
+}
+
+// Centering layout for pages
+.feir-auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg, $feir-bg-start 0%, $feir-bg-end 100%);
+}
+
+.feir-auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: $card-radius;
+  box-shadow: $card-shadow;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbff 100%);
+  padding: 20px;
+  box-sizing: border-box;
+  @include smooth-transition(all);
+  transform-origin: center;
+  // subtle entry animation
+  &.enter {
+    animation: feir-fade-in 320ms ease both;
+  }
+}
+
+@keyframes feir-fade-in {
+  from { opacity: 0; transform: translateY(8px) scale(.995); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.feir-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.feir-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: $feir-primary-dark;
+}
+.feir-subtitle {
+  font-size: 13px;
+  color: rgba($feir-text, 0.7);
+  margin-bottom: 12px;
+}
+
+.feir-input {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --border-radius: 10px;
+  background: $input-bg;
+  border: 1px solid $input-border;
+  border-radius: var(--border-radius);
+  height: 48px;
+  align-items: center;
+  margin-bottom: 12px;
+  @include smooth-transition(box-shadow, border-color, transform);
+
+  &:focus-within {
+    box-shadow: 0 6px 20px rgba($feir-primary, 0.12);
+    border-color: $feir-primary;
+    transform: translateY(-1px);
+  }
+}
+
+.feir-primary-btn {
+  --background: $feir-primary;
+  --background-pressed: $feir-primary-dark;
+  --color: #fff;
+  border-radius: 10px;
+  height: 48px;
+  font-weight: 600;
+  @include smooth-transition(background-color, transform);
+}
+
+.feir-alt-link {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  color: $feir-primary-dark;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.feir-error {
+  color: #c53030;
+  font-size: 13px;
+  margin-top: 6px;
+}

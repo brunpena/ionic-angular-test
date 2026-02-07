@@ -1,0 +1,129 @@
+<ion-content fullscreen class="feir-auth-root">
+  <!-- Background -->
+  <div class="bg-image"></div>
+
+  <!-- Painel de Registro -->
+  <div #registerPanel class="register-panel">
+    <div class="drag-handle"></div>
+
+    <div class="feir-logo">
+      <ion-icon name="storefront-outline" size="large" color="primary"></ion-icon>
+      <div>
+        <div class="feir-title">FeirApp</div>
+        <div class="feir-subtitle">Crie sua conta agora</div>
+      </div>
+    </div>
+
+    <ion-card>
+      <ion-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <!-- Name Input -->
+          <ion-item 
+            lines="none" 
+            class="feir-input"
+            [class.error]="isNameInvalid()"
+          >
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            <ion-input 
+              formControlName="name"
+              placeholder="Nome completo" 
+              type="text" 
+              aria-label="Nome"
+            ></ion-input>
+          </ion-item>
+          <div class="feir-error" *ngIf="isNameInvalid()">
+            {{ getNameError() }}
+          </div>
+
+          <!-- Email Input -->
+          <ion-item 
+            lines="none" 
+            class="feir-input"
+            [class.error]="isEmailInvalid()"
+          >
+            <ion-icon slot="start" name="mail-outline"></ion-icon>
+            <ion-input 
+              formControlName="email"
+              placeholder="Email" 
+              type="email" 
+              aria-label="Email"
+              inputmode="email"
+            ></ion-input>
+          </ion-item>
+          <div class="feir-error" *ngIf="isEmailInvalid()">
+            {{ getEmailError() }}
+          </div>
+
+          <!-- Password Input -->
+          <ion-item 
+            lines="none" 
+            class="feir-input"
+            [class.error]="isPasswordInvalid()"
+          >
+            <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+            <ion-input 
+              formControlName="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Senha" 
+              aria-label="Senha"
+            ></ion-input>
+            <ion-icon
+              slot="end"
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+              (click)="togglePasswordVisibility()"
+              class="toggle-password"
+              aria-label="Toggle password visibility"
+            ></ion-icon>
+          </ion-item>
+          <div class="feir-error" *ngIf="isPasswordInvalid()">
+            {{ getPasswordError() }}
+          </div>
+
+          <!-- Confirm Password Input -->
+          <ion-item 
+            lines="none" 
+            class="feir-input"
+            [class.error]="isConfirmPasswordInvalid()"
+          >
+            <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+            <ion-input 
+              formControlName="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Confirmar senha" 
+              aria-label="Confirmar senha"
+            ></ion-input>
+            <ion-icon
+              slot="end"
+              [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="toggle-password"
+              aria-label="Toggle confirm password visibility"
+            ></ion-icon>
+          </ion-item>
+          <div class="feir-error" *ngIf="isConfirmPasswordInvalid()">
+            {{ getConfirmPasswordError() }}
+          </div>
+
+          <!-- Submit Button -->
+          <ion-button 
+            expand="block" 
+            class="feir-primary-btn" 
+            type="submit"
+            [disabled]="loading"
+          >
+            <ion-spinner 
+              *ngIf="loading" 
+              slot="start" 
+              name="crescent"
+              aria-hidden="true"
+            ></ion-spinner>
+            <span *ngIf="!loading">Registrar</span>
+            <span *ngIf="loading">Cadastrando...</span>
+          </ion-button>
+        </form>
+
+        <a routerLink="/auth/login" class="feir-alt-link">Já tenho conta — Entrar</a>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
