@@ -1,0 +1,34 @@
+.app-header {
+  --background: rgba(20, 0, 35, 0.7);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #7a00ff, #b100ff);
+
+  box-shadow:
+    0 0 12px rgba(138,0,255,0.6);
+}
+
+.title {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #aaa;
+}

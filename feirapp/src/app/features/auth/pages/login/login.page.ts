@@ -1,144 +1,72 @@
+import { Component } from '@angular/core';
 import {
-  Component,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-  OnInit
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
-} from '@angular/forms';
-import gsap from 'gsap';
+  IonContent,
+  IonInput,
+  IonButton,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonSpinner
+} from '@ionic/angular/standalone';
+
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
+
+import { HeaderComponent } from '../../../../layout/header/header.component';
+import { AuthHttpService } from '../../../../core/services/auth-http.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: 'login.page.html',
-  styleUrls: ['login.page.scss'],
   standalone: true,
+  selector: 'app-login',
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
   imports: [
-    CommonModule,
-    RouterModule,
-    IonicModule,
-    ReactiveFormsModule
-  ],
+    IonContent,
+    IonInput,
+    IonButton,
+    IonItem,
+    IonLabel,
+    IonText,
+    IonSpinner,
+    ReactiveFormsModule,
+    HeaderComponent
+  ]
 })
-export class LoginPage implements OnInit, AfterViewInit {
-  loginForm!: FormGroup;
+export class LoginPage {
+
   loading = false;
-  showPassword = false;
+  errorMsg = '';
 
-  @ViewChild('loginPanel')
-  panel!: ElementRef;
+  form = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  });
 
-  constructor(private fb: FormBuilder) {
-    this.initForm();
-  }
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthHttpService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
-    this.initForm();
-  }
-
-  initForm() {
-    this.loginForm = this.fb.group({
-      email: [
-        '',
-        [
-          Validators.required,
-          Validators.email
-        ]
-      ],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6)
-        ]
-      ]
-    });
-  }
-
-  ngAfterViewInit() {
-    this.animatePanel();
-  }
-
-  animatePanel() {
-    if (this.panel) {
-      gsap.from(this.panel.nativeElement, {
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.6,
-        ease: 'power4.out'
-      });
-    }
-  }
-
-  get emailControl() {
-    return this.loginForm.get('email');
-  }
-
-  get passwordControl() {
-    return this.loginForm.get('password');
-  }
-
-  isEmailInvalid(): boolean {
-    const control = this.emailControl;
-    return !!(control && control.invalid && control.touched);
-  }
-
-  isPasswordInvalid(): boolean {
-    const control = this.passwordControl;
-    return !!(control && control.invalid && control.touched);
-  }
-
-  getEmailError(): string {
-    const control = this.emailControl;
-    if (!control || !control.errors) return '';
-
-    if (control.errors['required']) return 'Email is required';
-    if (control.errors['email']) return 'Please enter a valid email';
-
-    return '';
-  }
-
-  getPasswordError(): string {
-    const control = this.passwordControl;
-    if (!control || !control.errors) return '';
-
-    if (control.errors['required']) return 'Password is required';
-    if (control.errors['minlength']) {
-      return `Password must be at least ${control.errors['minlength'].requiredLength} characters`;
-    }
-
-    return '';
-  }
-
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
-  onLogin() {
-    if (!this.loginForm.valid) {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.loginForm.controls).forEach(key => {
-        this.loginForm.get(key)?.markAsTouched();
-      });
+  login() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
     this.loading = true;
-    const { email, password } = this.loginForm.value;
+    this.errorMsg = '';
 
-    // TODO: Call actual auth service here
-    console.log('Attempting login with:', { email });
+    this.auth.login(this.form.value as any)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => this.router.navigateByUrl('/events/home'),
+        error: err => this.errorMsg = err.message || 'Falha no login'
+      });
+  }
 
-    setTimeout(() => (this.loading = false), 1200);
+  goRegister() {
+    this.router.navigateByUrl('/auth/register');
   }
 }
-
-

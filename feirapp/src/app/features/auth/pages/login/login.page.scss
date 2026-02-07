@@ -1,331 +1,82 @@
-@use "../../../../shared/styles/_auth.scss" as auth;
+ion-content {
+  --background: radial-gradient(circle at top, #1a0026, #050008);
+}
 
-:host { display: block; }
+.login-wrapper {
+  height: calc(100vh - 120px);
 
-/* Root container */
-.feir-auth-root {
-  position: relative;
-  overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-}
+  gap: 18px;
 
-/* Background fallback com gradiente */
-.bg-image {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    #f6f7ff 0%,
-    #eef2ff 50%,
-    #e8ecff 100%
-  );
-  filter: brightness(0.98);
-  z-index: 0;
-}
-
-/* Painel central com animação GSAP */
-.login-panel {
-  position: relative;
-  width: 90%;
+  padding: 28px;
   max-width: 420px;
-  max-height: 85vh;
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #fafbff 100%
-  );
-  backdrop-filter: blur(12px);
-  border-radius: 28px;
-  padding: 32px 24px;
-  box-shadow: 0 8px 30px rgba(108, 99, 255, 0.1);
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-  overflow: hidden;
+  margin: 0 auto;
+
 }
 
-/* Handle visual para drag */
-.drag-handle {
-  width: 44px;
-  height: 5px;
-  background: rgba(108, 99, 255, 0.25);
-  border-radius: 999px;
-  margin: 0 auto 16px auto;
-  transition: background 200ms ease;
-}
-
-.login-panel:active .drag-handle {
-  background: rgba(108, 99, 255, 0.4);
-}
-
-/* Logo seção */
-.feir-logo {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.feir-logo ion-icon {
-  font-size: 36px;
-}
-
-.feir-title {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.4px;
-  color: auth.$feir-primary-dark;
-  margin: 0;
-  line-height: 1.2;
-}
-
-.feir-subtitle {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(108, 99, 255, 0.6);
-  margin: 4px 0 0 0;
-  letter-spacing: 0.2px;
-}
-
-/* Card container */
-ion-card {
-  --background: rgba(108, 99, 255, 0.02);
-  --box-shadow: inset 0 1px 2px rgba(108, 99, 255, 0.08);
-  border: 1px solid rgba(108, 99, 255, 0.1);
-  border-radius: 14px;
-  margin: 0;
-  padding: 0;
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-ion-card-content {
-  padding: 16px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  flex: 1;
-  overflow-y: auto;
-}
-
-/* Input fields */
-.feir-input {
-  --padding-start: 12px;
-  --padding-end: 12px;
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --inner-padding-start: 0;
-  --inner-padding-end: 0;
-  --border-radius: 11px;
-  height: 52px;
-  margin-bottom: 10px;
-  background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
-  border: 1.5px solid rgba(180, 180, 180, 0.3);
-  transition:
-    border-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    background-color 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 140ms cubic-bezier(0.075, 0.82, 0.165, 1);
-
-  ion-icon {
-    color: rgba(108, 99, 255, 0.5);
-    font-size: 20px;
-    transition: color 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  ion-input {
-    padding: 0 10px;
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-
-    &::placeholder {
-      color: rgba(108, 99, 255, 0.5);
-      font-weight: 400;
-    }
-  }
-
-  &:focus-within {
-    border-color: auth.$feir-primary;
-    background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-    box-shadow:
-      0 4px 12px rgba(108, 99, 255, 0.16),
-      inset 0 1px 2px rgba(108, 99, 255, 0.08);
-    transform: translateY(-2px);
-
-    ion-icon {
-      color: auth.$feir-primary;
-      transform: scale(1.1);
-    }
-  }
-
-  &:active {
-    transform: translateY(-1px);
-  }
-}
-
-&.error {
-  border-color: #ef4444;
-  background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
-  box-shadow:
-    0 4px 12px rgba(239, 68, 68, 0.12),
-    inset 0 1px 2px rgba(239, 68, 68, 0.08);
-
-  ion-icon {
-    color: #ef4444;
-  }
-
-  &:focus-within {
-    border-color: #ef4444;
-    background: linear-gradient(135deg, #fff5f5 0%, #ffeaea 100%);
-    box-shadow:
-      0 4px 12px rgba(239, 68, 68, 0.16),
-      inset 0 1px 2px rgba(239, 68, 68, 0.08);
-
-    ion-icon {
-      color: #ef4444;
-    }
-  }
-}
-
-/* Primary button */
-.feir-primary-btn {
-  --background: auth.$feir-primary;
-  --background-activated: auth.$feir-primary-dark;
-  --background-hover: auth.$feir-primary-dark;
-  --color: #{auth.$feir-primary-dark};
-  --padding-top: 0;
-  --padding-bottom: 0;
-  --padding-start: 0;
-  --padding-end: 0;
-  --border-radius: 11px;
-  height: 52px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  font-size: 16px;
+.login-title {
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: 0.3px;
-  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.24);
-  transition:
-    box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 140ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  position: relative;
-  overflow: hidden;
-
-  &:active {
-    transform: scale(0.98);
-  }
-
-  &:hover {
-    box-shadow: 0 6px 20px rgba(108, 99, 255, 0.32);
-    transform: translateY(-2px);
-  }
-
-  ion-spinner {
-    margin-right: 8px;
-  }
+  color: white;
 }
 
-/* Alternative link */
-.feir-alt-link {
-  display: block;
-  text-align: center;
-  padding: 12px;
-  color: auth.$feir-primary-dark;
+.login-subtitle {
   font-size: 14px;
+  color: #a0a0b8;
+  margin-bottom: 8px;
+}
+
+/* Inputs */
+
+ion-item {
+  --background: rgba(255,255,255,0.04);
+  --border-radius: 14px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Botão */
+
+.login-btn {
+  margin-top: 12px;
+
+  --background: linear-gradient(135deg, #7a00ff, #b100ff);
+  --border-radius: 14px;
+
   font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    color 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    text-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.5px;
 
-  &:hover {
-    color: auth.$feir-primary;
-    text-shadow: 0 2px 8px rgba(108, 99, 255, 0.2);
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-}
-/* Error states and validation feedback */
-.feir-input.error {
-  border-color: #ef4444;
-  background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
   box-shadow:
-    0 4px 12px rgba(239, 68, 68, 0.12),
-    inset 0 1px 2px rgba(239, 68, 68, 0.08);
+    0 6px 18px rgba(138,0,255,0.5);
 
-  ion-icon {
-    color: #ef4444;
-  }
-
-  &:focus-within {
-    border-color: #ef4444;
-    background: linear-gradient(135deg, #fff5f5 0%, #ffeaea 100%);
-    box-shadow:
-      0 4px 12px rgba(239, 68, 68, 0.16),
-      inset 0 1px 2px rgba(239, 68, 68, 0.08);
-
-    ion-icon {
-      color: #ef4444;
-    }
-  }
+  transition: transform 0.15s ease;
 }
 
-.feir-error {
-  font-size: 12px;
-  font-weight: 500;
-  color: #ef4444;
-  padding: 0 12px 8px 12px;
-  letter-spacing: 0.2px;
-  animation: slideDown 200ms cubic-bezier(0.23, 1, 0.32, 1);
+.login-btn:active {
+  transform: scale(0.97);
 }
 
-/* Password visibility toggle */
-.toggle-password {
-  cursor: pointer;
-  color: auth.$feir-primary;
-  transition:
-    color 140ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 140ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  padding: 8px;
+/* Footer */
 
-  &:active {
-    transform: scale(0.9);
-  }
-
-  &:hover {
-    color: auth.$feir-primary-dark;
-  }
+.login-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #999;
 }
 
-/* Button disabled state */
-ion-button:disabled {
-  --opacity: 0.7;
+.login-footer a {
+  color: #b100ff;
+  font-weight: 600;
+  margin-left: 4px;
 }
 
-/* Additional animations */
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
+/* Error */
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+ion-text {
+  text-align: center;
+  font-size: 13px;
 }
