@@ -1,15 +1,32 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import {
+  CanActivateFn,
+  Router,
+} from '@angular/router';
+import { map, take } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
-@Injectable({ providedIn: 'root' })
-export class GuestGuard implements CanActivate {
-	canActivate(
-		route: ActivatedRouteSnapshot,
-		state: RouterStateSnapshot
-	): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-		// Minimal implementation: allow navigation for guests.
-		return true;
-	}
-}
+/**
+ * GuestGuard
+ *
+ * Permite acesso apenas se NÃO estiver autenticado
+ * Caso esteja logado → redireciona para home
+ */
+export const guestGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
+  return auth.user$.pipe(
+    take(1),
+
+    map(user => {
+      // Usuário NÃO logado → pode acessar
+      if (!user) {
+        return true;
+      }
+
+      // Usuário logado → redireciona
+      return router.createUrlTree(['/events/home']);
+    })
+  );
+};

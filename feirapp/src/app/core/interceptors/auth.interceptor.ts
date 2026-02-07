@@ -1,40 +1,26 @@
-import { Injectable } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { StorageService } from '../services/storage.service';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(private storage: StorageService) {}
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    // Get the auth token from storage
-    const token = this.storage.getItem('auth_token');
+  const storage = inject(StorageService);
+  const token = storage.getItem('auth_token');
 
-    // Skip adding token for auth endpoints
-    if (
-      req.url.includes('/auth/login') ||
-      req.url.includes('/auth/register') ||
-      !token
-    ) {
-      return next.handle(req);
-    }
-
-    // Clone the request and add the authorization header
-    const authReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    return next.handle(authReq);
+  // Ignora rotas públicas
+  if (
+    !token ||
+    req.url.includes('/auth/login') ||
+    req.url.includes('/auth/register')
+  ) {
+    return next(req);
   }
-}
+
+  const authReq = req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return next(authReq);
+};

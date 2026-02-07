@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { User } from '../../shared/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-	private _currentUser: User | null = null;
 
-	getCurrentUser(): Observable<User | null> {
-		return of(this._currentUser);
-	}
+  private userSubject = new BehaviorSubject<User | null>(null);
+  readonly user$ = this.userSubject.asObservable();
 
-	setCurrentUser(user: User | null) {
-		this._currentUser = user;
-	}
+  setCurrentUser(user: User | null): void {
+    this.userSubject.next(user);
+  }
+
+  getCurrentUser(): User | null {
+    return this.userSubject.value;
+  }
+
+  clear(): void {
+    this.userSubject.next(null);
+  }
 }
-

@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap, catchError, of } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  tap,
+  catchError,
+  throwError,
+  of
+} from 'rxjs';
+
 import { StorageService } from './storage.service';
 import { User } from '../../shared/models/user.model';
 
@@ -20,16 +28,16 @@ export interface RegisterRequest {
   password: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthHttpService {
-  private apiUrl = '/api/auth'; // Replace with actual API URL
+
+  private readonly apiUrl = '/api/auth';
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  readonly currentUser$ = this.currentUserSubject.asObservable();
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  readonly isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -38,88 +46,86 @@ export class AuthHttpService {
     this.initAuth();
   }
 
-  /**
-   * Initialize authentication state from stored token
-   */
+  // =============================
+  // INIT
+  // =============================
   private initAuth(): void {
     const token = this.storage.getItem('auth_token');
+
     if (token) {
       this.isAuthenticatedSubject.next(true);
     }
   }
 
-  /**
-   * Login user with email and password
-   */
+  // =============================
+  // LOGIN
+  // =============================
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
-      tap(response => {
-        this.storage.setItem('auth_token', response.token);
-        this.currentUserSubject.next(response.user);
-        this.isAuthenticatedSubject.next(true);
-      }),
-      catchError(error => {
-        console.error('Login failed:', error);
-        throw error;
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/login`, request)
+      .pipe(
+        tap(res => this.setSession(res)),
+        catchError(err => {
+          console.error('Login failed', err);
+          return throwError(() => err);
+        })
+      );
   }
 
-  /**
-   * Register new user
-   */
+  // =============================
+  // REGISTER
+  // =============================
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request).pipe(
-      tap(response => {
-        this.storage.setItem('auth_token', response.token);
-        this.currentUserSubject.next(response.user);
-        this.isAuthenticatedSubject.next(true);
-      }),
-      catchError(error => {
-        console.error('Registration failed:', error);
-        throw error;
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/register`, request)
+      .pipe(
+        tap(res => this.setSession(res)),
+        catchError(err => {
+          console.error('Register failed', err);
+          return throwError(() => err);
+        })
+      );
   }
 
-  /**
-   * Logout current user
-   */
+  // =============================
+  // LOGOUT API
+  // =============================
   logout(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/logout`, {}).pipe(
-      tap(() => {
-        this.storage.removeItem('auth_token');
-        this.currentUserSubject.next(null);
-        this.isAuthenticatedSubject.next(false);
-      }),
-      catchError(error => {
-        // Clear local state even if logout fails
-        this.storage.removeItem('auth_token');
-        this.currentUserSubject.next(null);
-        this.isAuthenticatedSubject.next(false);
-        console.error('Logout failed:', error);
+      tap(() => this.logoutLocal()),
+      catchError(err => {
+        this.logoutLocal();
         return of(undefined);
       })
     );
   }
 
-  /**
-   * Get current user
-   */
+  // =============================
+  // LOGOUT LOCAL (INTERCEPTOR SAFE)
+  // =============================
+  logoutLocal(): void {
+    this.storage.removeItem('auth_token');
+    this.currentUserSubject.next(null);
+    this.isAuthenticatedSubject.next(false);
+  }
+
+  // =============================
+  // HELPERS
+  // =============================
+  private setSession(res: AuthResponse) {
+    this.storage.setItem('auth_token', res.token);
+    this.currentUserSubject.next(res.user);
+    this.isAuthenticatedSubject.next(true);
+  }
+
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  /**
-   * Check if user is authenticated
-   */
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
   }
 
-  /**
-   * Get stored auth token
-   */
   getToken(): string | null {
     return this.storage.getItem('auth_token');
   }

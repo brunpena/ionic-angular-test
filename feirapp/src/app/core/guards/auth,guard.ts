@@ -1,15 +1,42 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import {
+  CanActivateFn,
+  Router,
+  UrlTree,
+} from '@angular/router';
+import { map, take } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
-@Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
-	canActivate(
-		route: ActivatedRouteSnapshot,
-		state: RouterStateSnapshot
-	): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-		// Minimal implementation: allow navigation. Replace with real auth check.
-		return true;
-	}
-}
+/**
+ * Guard principal de autenticação
+ *
+ * ✔ Verifica sessão ativa
+ * ✔ Suporta fluxo async
+ * ✔ Redireciona preservando URL
+ * ✔ Pronto para JWT/backend
+ */
+export const authGuard: CanActivateFn = (route, state) => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
+  return auth.user$.pipe(
+    take(1),
+
+    map(user => {
+      // Usuário autenticado
+      if (user) {
+        return true;
+      }
+
+      // Redireciona mantendo destino
+      return router.createUrlTree(
+        ['/auth/login'],
+        {
+          queryParams: {
+            redirect: state.url
+          }
+        }
+      );
+    })
+  );
+};
