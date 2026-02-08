@@ -1,4 +1,40 @@
-<div class="event-card">
-  <h3>{{ title }}</h3>
-  <p>{{ date }}</p>
-</div>
+<ion-card class="event-card"
+  [class.full]="isFull"
+  [class.past]="isPast"
+  [class.subscribed]="subscribed">
+
+  <!-- BADGES -->
+  <div class="badges">
+
+    <span class="badge full" *ngIf="isFull">
+      Lotado
+    </span>
+
+    <span class="badge past" *ngIf="isPast">
+      Encerrado
+    </span>
+
+    <span class="badge subscribed" *ngIf="subscribed && !isPast">
+      Inscrito
+    </span>
+
+  </div>
+
+  <h2>{{ event.titulo }}</h2>
+
+  <p class="date">
+    {{ event.dataInicio | date:'dd/MM/yyyy, HH:mm' }}
+  </p>
+
+  <p class="location">
+    {{ event.local }} — {{ event.cidade }}
+  </p>
+
+  <div class="footer">
+    <span class="category">{{ event.categoria }}</span>
+    <span class="count">
+      {{ event.inscritosCount }} / {{ event.lotacaoMax }}
+    </span>
+  </div>
+
+</ion-card>

@@ -1,2 +1,119 @@
-/* Minimal styles for events home */
-:host { display: block; }
+/* ================================
+   FUNDO GERAL
+================================ */
+ion-content {
+  --background: #0e0e11;
+}
+
+/* ================================
+   FILTROS
+================================ */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+/* ================================
+   GRID DE DATAS
+================================ */
+.date-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ================================
+   CAMPO DE DATA (CUSTOM)
+================================ */
+.date-field {
+  background: #1a1a1f;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-field span {
+  font-size: 12px;
+  color: #9a9aa1;
+}
+
+.date-field input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.date-field input::placeholder {
+  color: #6f6f78;
+}
+
+/* ================================
+   SEARCHBAR
+================================ */
+ion-searchbar {
+  --background: #1a1a1f;
+  --color: #ffffff;
+  --placeholder-color: #9a9aa1;
+  --icon-color: #8b5cff;
+  --clear-button-color: #8b5cff;
+
+  border-radius: 16px;
+  margin-top: 12px;
+}
+
+/* ================================
+   SELECT
+================================ */
+ion-select {
+  background: #1a1a1f;
+  border-radius: 14px;
+  padding: 14px;
+  color: white;
+
+  --placeholder-color: #9a9aa1;
+  --highlight-color-focused: #8b5cff;
+  --highlight-color-valid: #8b5cff;
+}
+
+/* POPUP */
+ion-popover {
+  --background: #1a1a1f;
+}
+
+ion-popover ion-label {
+  color: #ffffff;
+}
+
+/* ================================
+   BOTÃO "MEUS EVENTOS"
+================================ */
+ion-button {
+  --background: linear-gradient(135deg, #8b5cff, #6f4cff);
+  --background-activated: #6f4cff;
+  --border-radius: 18px;
+  font-weight: 600;
+}
+
+/* ================================
+   LISTA DE CARDS
+================================ */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* ================================
+   INFINITE / REFRESH
+================================ */
+ion-infinite-scroll-content,
+ion-refresher-content {
+  --color: #8b5cff;
+}

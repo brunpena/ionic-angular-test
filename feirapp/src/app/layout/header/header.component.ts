@@ -8,6 +8,12 @@ import {
   IonTitle
 } from '@ionic/angular/standalone';
 
+import { Router } from '@angular/router';
+import { AuthHttpService } from '../../core/services/auth-http.service';
+
+import { addIcons } from 'ionicons';
+import { logOutOutline } from 'ionicons/icons';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -24,18 +30,20 @@ import {
 })
 export class HeaderComponent {
 
-  @Input() title = 'FeirApp';
-  @Input() showMenu = true;
-  @Input() showProfile = true;
+  @Input() title = 'Feirapp';
 
-  @Output() menuClick = new EventEmitter<void>();
-  @Output() profileClick = new EventEmitter<void>();
-
-  onMenu() {
-    this.menuClick.emit();
+  constructor(
+    private auth: AuthHttpService,
+    private router: Router
+  ) {
+    addIcons({ logOutOutline });
   }
 
-  onProfile() {
-    this.profileClick.emit();
+  logout() {
+    this.auth.logoutLocal();
+
+    this.router.navigateByUrl('/auth/login', {
+      replaceUrl: true
+    });
   }
 }

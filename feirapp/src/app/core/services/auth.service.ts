@@ -103,4 +103,18 @@ export class AuthService {
 
     this.userSubject.next(user);
   }
+
+  // Accept an auth response from a mock or alternate service
+  // and map it to the internal AuthUser shape.
+  setSessionFromResponse(token: string, payload: { id: string; name?: string; email?: string; cidade?: string }) {
+    const user: AuthUser = {
+      id: payload.id,
+      nome: (payload as any).name ?? (payload as any).nome ?? '',
+      email: payload.email ?? '',
+      cidade: payload.cidade ?? '',
+      token
+    };
+
+    this.setSession(user);
+  }
 }

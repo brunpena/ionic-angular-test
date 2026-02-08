@@ -61,7 +61,7 @@ export class LoginPage {
     this.auth.login(this.form.value as any)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: () => this.router.navigateByUrl('/events/home'),
+        next: () => this.router.navigateByUrl('/home'),
         error: err => this.errorMsg = err.message || 'Falha no login'
       });
   }

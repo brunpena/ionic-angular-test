@@ -2,7 +2,7 @@
 
 <ion-content fullscreen="true">
 
-  <div class="login-wrapper">
+  <form [formGroup]="form" class="login-wrapper" (ngSubmit)="login()">
 
     <div class="login-title">
       Bem-vindo 👋
@@ -14,16 +14,17 @@
 
     <ion-item lines="none">
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email"></ion-input>
+      <ion-input type="email" formControlName="email"></ion-input>
     </ion-item>
 
     <ion-item lines="none">
       <ion-label position="floating">Senha</ion-label>
-      <ion-input type="password"></ion-input>
+      <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
 
-    <ion-button expand="block" class="login-btn" (click)="login()">
-      Entrar
+    <ion-button expand="block" class="login-btn" type="submit" [disabled]="loading">
+      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      <span *ngIf="!loading">Entrar</span>
     </ion-button>
 
     <div class="login-footer">
@@ -31,6 +32,6 @@
       <a (click)="goRegister()">Criar conta</a>
     </div>
 
-  </div>
+  </form>
 
 </ion-content>

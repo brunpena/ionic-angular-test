@@ -1,11 +1,25 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonContent, IonButton } from '@ionic/angular/standalone';
+import { AuthHttpService } from 'src/app/core/services/auth-http.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-my-events',
-  templateUrl: 'my-events.page.html',
-  styleUrls: ['my-events.page.scss'],
   standalone: true,
-  imports: [IonicModule],
+  selector: 'app-my-events',
+  templateUrl: './my-events.page.html',
+  styleUrls: ['./my-events.page.scss'],
+  imports: [IonContent, IonButton]
 })
-export class MyEventsPage {}
+export class MyEventsPage {
+
+  constructor(
+    private auth: AuthHttpService,
+    private router: Router
+  ) {}
+
+  logout() {
+    this.auth.logout().subscribe(() => {
+      this.router.navigateByUrl('/auth/login');
+    });
+  }
+}

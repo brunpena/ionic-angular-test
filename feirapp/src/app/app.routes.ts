@@ -6,30 +6,45 @@ export const routes: Routes = [
 
   // ========= AUTH =========
   {
-    path: 'auth/login',
-    canActivate: [guestGuard],
-    loadComponent: () =>
-      import('./features/auth/pages/login/login.page')
-        .then(m => m.LoginPage),
-  },
-  {
-    path: 'auth/register',
-    canActivate: [guestGuard],
-    loadComponent: () =>
-      import('./features/auth/pages/register/register.page')
-        .then(m => m.RegisterPage),
+    path: 'auth',
+    children: [
+      {
+        path: 'login',
+        canActivate: [guestGuard],
+        loadComponent: () =>
+          import('./features/auth/pages/login/login.page')
+            .then(m => m.LoginPage),
+      },
+      {
+        path: 'register',
+        canActivate: [guestGuard],
+        loadComponent: () =>
+          import('./features/auth/pages/register/register.page')
+            .then(m => m.RegisterPage),
+      }
+    ]
   },
 
-  // ========= APP PROTECTED =========
+  // ========= APP COM HEADER =========
   {
     path: '',
     canActivate: [authGuard],
+    loadComponent: () =>
+      import('./layout/app-layout.component')
+        .then(m => m.AppLayoutComponent),
+
     children: [
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./features/events/pages/home/home.page')
+            .then(m => m.HomePage),
+      },
       {
         path: 'events/home',
         loadComponent: () =>
           import('./features/events/pages/home/home.page')
-            .then(m => m.EventsHomePage),
+            .then(m => m.HomePage),
       },
       {
         path: 'events/my',
@@ -48,11 +63,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/profile/pages/profile/profile.page')
             .then(m => m.ProfilePage),
-      },
-    ],
+      }
+    ]
   },
 
-  // ========= DEFAULT ROOT =========
+  // ========= ROOT =========
   {
     path: '',
     redirectTo: 'auth/login',
@@ -63,5 +78,5 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'auth/login',
-  },
+  }
 ];
