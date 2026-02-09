@@ -1,42 +1,35 @@
-import { inject } from '@angular/core';
 import {
-  CanActivateFn,
-  Router,
-  UrlTree,
-} from '@angular/router';
-import { map, take } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
-/**
- * Guard principal de autenticação
- *
- * ✔ Verifica sessão ativa
- * ✔ Suporta fluxo async
- * ✔ Redireciona preservando URL
- * ✔ Pronto para JWT/backend
- */
-export const authGuard: CanActivateFn = (route, state) => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
 
-  return auth.user$.pipe(
-    take(1),
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers.authorization;
 
-    map(user => {
-      // Usuário autenticado
-      if (user) {
-        return true;
-      }
+    if (!authHeader) {
+      throw new UnauthorizedException('Token not provided');
+    }
 
-      // Redireciona mantendo destino
-      return router.createUrlTree(
-        ['/auth/login'],
-        {
-          queryParams: {
-            redirect: state.url
-          }
-        }
-      );
-    })
-  );
-};
+    const [, token] = authHeader.split(' ');
+
+    if (!token) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    try {
+      const payload = this.jwtService.verify(token);
+      request.user = payload; // 👈 user disponível no controller
+      return true;
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+  }
+}

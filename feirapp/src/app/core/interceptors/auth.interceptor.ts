@@ -1,26 +1,15 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { StorageService } from '../services/storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('token');
 
-  const storage = inject(StorageService);
-  const token = storage.getItem('auth_token');
-
-  // Ignora rotas públicas
-  if (
-    !token ||
-    req.url.includes('/auth/login') ||
-    req.url.includes('/auth/register')
-  ) {
-    return next(req);
+  if (token) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-
-  return next(authReq);
+  return next(req);
 };

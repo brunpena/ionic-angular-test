@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@nestjs/common": "^11.1.13",
+    "@nestjs/jwt": "^11.0.2",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10"
+  }
+}

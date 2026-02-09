@@ -1,32 +1,33 @@
-import { inject } from '@angular/core';
 import {
-  CanActivateFn,
-  Router,
-} from '@angular/router';
-import { map, take } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
-/**
- * GuestGuard
- *
- * Permite acesso apenas se NÃO estiver autenticado
- * Caso esteja logado → redireciona para home
- */
-export const guestGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
-  const router = inject(Router);
+@Injectable()
+export class GuestGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
 
-  return auth.user$.pipe(
-    take(1),
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers.authorization;
 
-    map(user => {
-      // Usuário NÃO logado → pode acessar
-      if (!user) {
-        return true;
-      }
+    if (!authHeader) {
+      return true; // visitante
+    }
 
-      // Usuário logado → redireciona
-      return router.createUrlTree(['/events/home']);
-    })
-  );
-};
+    const [, token] = authHeader.split(' ');
+
+    if (!token) {
+      return true;
+    }
+
+    try {
+      this.jwtService.verify(token);
+      return false; // já logado
+    } catch {
+      return true;
+    }
+  }
+}
