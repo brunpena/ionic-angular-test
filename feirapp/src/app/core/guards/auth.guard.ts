@@ -1,35 +1,15 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-@Injectable()
-export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+export const authGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
-
-    if (!authHeader) {
-      throw new UnauthorizedException('Token not provided');
-    }
-
-    const [, token] = authHeader.split(' ');
-
-    if (!token) {
-      throw new UnauthorizedException('Invalid token');
-    }
-
-    try {
-      const payload = this.jwtService.verify(token);
-      request.user = payload; // 👈 user disponível no controller
-      return true;
-    } catch {
-      throw new UnauthorizedException('Invalid or expired token');
-    }
+  if (auth.isLoggedIn()) {
+    return true;
   }
-}
+
+  router.navigate(['/login']);
+  return false;
+};

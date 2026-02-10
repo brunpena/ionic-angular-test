@@ -1,33 +1,15 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-@Injectable()
-export class GuestGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+export const guestGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
-
-    if (!authHeader) {
-      return true; // visitante
-    }
-
-    const [, token] = authHeader.split(' ');
-
-    if (!token) {
-      return true;
-    }
-
-    try {
-      this.jwtService.verify(token);
-      return false; // já logado
-    } catch {
-      return true;
-    }
+  if (!auth.isLoggedIn()) {
+    return true;
   }
-}
+
+  router.navigate(['/']);
+  return false;
+};
