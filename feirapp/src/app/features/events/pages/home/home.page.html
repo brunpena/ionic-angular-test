@@ -64,7 +64,7 @@
       <app-event-card
         *ngFor="let e of visibleEvents"
         [event]="e"
-        [subscribed]="svc.isSubscribed(e.id)"
+        [subscribed]="e.isSubscribed ?? false"
         (click)="openEvent(e.id)">
       </app-event-card>
     </div>

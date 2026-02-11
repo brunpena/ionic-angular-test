@@ -11,8 +11,9 @@ interface AuthUser {
 
 interface RegisterDto { 
   email: string;
-  nome: string;
-  senha: string;
+  name: string;
+  password: string;
+  city: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,11 +21,12 @@ export class AuthService extends ApiService {
 
   private readonly TOKEN_KEY = 'auth_token';
 
-  login(data: { email: string; senha: string }) {
+  login(data: { email: string; password: string }) {
     return this.post<AuthUser>('/auth/login', data).pipe(
       tap(res => this.setToken(res.token))
     );
   }
+
 
   register(data: RegisterDto) {
     return this.post<AuthUser>('/auth/register', data).pipe(

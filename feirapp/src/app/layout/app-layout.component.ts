@@ -3,7 +3,7 @@ import { RouterOutlet, Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 
 import { HeaderComponent } from './header/header.component';
-import { AuthHttpService } from '../core/services/auth-http.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -26,12 +26,12 @@ import { AuthHttpService } from '../core/services/auth-http.service';
 export class AppLayoutComponent {
 
   constructor(
-    private auth: AuthHttpService,
+    private auth: AuthService,
     private router: Router
   ) {}
 
   logout() {
-    this.auth.logoutLocal();
+    this.auth.logout();
     this.router.navigateByUrl('/auth/login', { replaceUrl: true });
   }
 }

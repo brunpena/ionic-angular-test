@@ -14,7 +14,9 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { HeaderComponent } from '../../../../layout/header/header.component';
-import { AuthHttpService } from '../../../../core/services/auth-http.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   standalone: true,
@@ -22,6 +24,7 @@ import { AuthHttpService } from '../../../../core/services/auth-http.service';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   imports: [
+    CommonModule,
     IonContent,
     IonInput,
     IonButton,
@@ -41,12 +44,13 @@ export class RegisterPage {
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    city: ['', [Validators.required, Validators.minLength(2)]],
   });
 
   constructor(
     private fb: FormBuilder,
-    private auth: AuthHttpService,
+    private auth: AuthService,
     private router: Router
   ) {}
 
@@ -63,7 +67,8 @@ export class RegisterPage {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: () => this.router.navigateByUrl('/home'),
-        error: err => this.errorMsg = err.message || 'Falha no cadastro'
+        error: (err: any) =>
+          this.errorMsg = err?.error?.message || 'Falha no cadastro'
       });
   }
 

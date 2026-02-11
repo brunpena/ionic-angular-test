@@ -9,38 +9,38 @@ import {
 } from '@ionic/angular/standalone';
 
 import { Router } from '@angular/router';
-import { AuthHttpService } from '../../core/services/auth-http.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
 
 @Component({
+  standalone: true, // 👈 OBRIGATÓRIO
   selector: 'app-header',
-  standalone: true,
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
   imports: [
+    IonIcon,
     IonHeader,
     IonToolbar,
     IonButtons,
     IonButton,
-    IonIcon,
     IonTitle
-  ],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  ]
 })
 export class HeaderComponent {
 
   @Input() title = 'Feirapp';
 
   constructor(
-    private auth: AuthHttpService,
+    private auth: AuthService,
     private router: Router
   ) {
     addIcons({ logOutOutline });
   }
 
   logout() {
-    this.auth.logoutLocal();
+    this.auth.logout();
 
     this.router.navigateByUrl('/auth/login', {
       replaceUrl: true

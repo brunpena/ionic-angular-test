@@ -18,7 +18,7 @@ import {
   IonItem
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { EventService } from '../../services/event.service';
+import { EventsService as EventService } from 'src/app/core/services/events.service';
 import { EventModel } from '../../../../shared/models/event.model';
 import { EventCardComponent } from '../components/event-card/event-card.component';
 
@@ -67,9 +67,28 @@ export class HomePage implements OnInit {
     public svc: EventService
   ) {}
 
+
   ngOnInit() {
-    this.svc.list().subscribe(list => {
-      this.allEvents = list;
+    this.svc.list().subscribe((list: any[]) => {
+      this.allEvents = list.map(ev => ({
+        id: ev.id,
+        titulo: ev.nome,
+        descricao: ev.descricao,
+        imagemUrl: ev.imagem,
+
+        dataInicio: ev.data,
+        dataFim: undefined,
+
+        local: ev.local,
+        cidade: '',
+        categoria: undefined,
+
+        lotacaoMax: 999, // ou valor fixo até backend enviar
+        inscritosCount: ev.inscritos,
+
+        isSubscribed: false
+      }));
+
       this.applyFilters(true);
     });
   }

@@ -14,7 +14,9 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { HeaderComponent } from '../../../../layout/header/header.component';
-import { AuthHttpService } from '../../../../core/services/auth-http.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   standalone: true,
@@ -22,6 +24,7 @@ import { AuthHttpService } from '../../../../core/services/auth-http.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   imports: [
+    CommonModule,
     IonContent,
     IonInput,
     IonButton,
@@ -45,7 +48,7 @@ export class LoginPage {
 
   constructor(
     private fb: FormBuilder,
-    private auth: AuthHttpService,
+    private auth: AuthService,
     private router: Router
   ) {}
 
@@ -62,7 +65,8 @@ export class LoginPage {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: () => this.router.navigateByUrl('/home'),
-        error: err => this.errorMsg = err.message || 'Falha no login'
+        error: (err: any) =>
+          this.errorMsg = err?.error?.message || 'Falha no login'
       });
   }
 
