@@ -1,0 +1,57 @@
+<ion-card class="event-card">
+
+  <!-- ÁREA CLICÁVEL -->
+  <div class="card-clickable" (click)="onOpen()">
+
+    <div class="title-wrapper">
+      <h2 class="event-title">
+        {{ event.title }}
+      </h2>
+
+      <span class="category">
+        {{ event.category }}
+      </span>
+    </div>
+
+    <div class="meta">
+      📅 {{ event.startDate | date:'dd/MM/yyyy HH:mm' }}
+    </div>
+
+    <div class="meta">
+      📍 {{ event.location }} — {{ event.city }}
+    </div>
+
+    <div class="capacity">
+      {{ event.subscribersCount || 0 }} / {{ event.maxCapacity }} inscritos
+    </div>
+
+  </div>
+
+  <!-- AÇÕES (FORA DA ÁREA CLICÁVEL) -->
+  <div class="card-actions">
+
+    <!-- BOTÃO INSCRIÇÃO -->
+    <ion-button
+      expand="block"
+      [disabled]="loadingId === event.id || isPast || isFull"
+      (click)="onSubscribe($event)"
+    >
+      {{ event.isSubscribed ? 'Cancelar inscrição' : 'Inscrever-se' }}
+    </ion-button>
+
+    <!-- BADGES -->
+    <div class="badges">
+
+      <ion-badge color="danger" *ngIf="isFull">
+        Lotado
+      </ion-badge>
+
+      <ion-badge color="medium" *ngIf="isPast">
+        Encerrado
+      </ion-badge>
+
+    </div>
+
+  </div>
+
+</ion-card>

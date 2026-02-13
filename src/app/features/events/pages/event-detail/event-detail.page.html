@@ -1,0 +1,72 @@
+<ion-content fullscreen>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  
+  <div *ngIf="event as e; else notFound">
+
+    <!-- BANNER -->
+    <div class="banner">
+      <img *ngIf="e.imageUrl; else noImage" [src]="e.imageUrl" alt="Event banner" />
+      <ng-template #noImage><div class="no-image"></div></ng-template>
+
+      <div class="banner-overlay">
+        <h1 class="event-title">{{ e.title }}</h1>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content-wrapper">
+      <div class="event-card">
+
+        <div class="meta-grid">
+          <div class="meta-item">📍 {{ e.location }} — {{ e.city }}</div>
+          <div class="meta-item">
+            🗓 {{ e.startDate | date:'dd/MM/yyyy HH:mm' }}
+            <span *ngIf="e.endDate"> — {{ e.endDate | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="meta-item">📚 {{ e.category }}</div>
+          <div class="meta-item capacity">{{ e.subscribersCount || 0 }} / {{ e.maxCapacity }} inscritos</div>
+        </div>
+
+        <p class="description">{{ e.description }}</p>
+
+        <!-- AÇÕES -->
+        <div class="actions">
+
+          <ion-button
+            expand="block"
+            color="primary"
+            (click)="toggleSubscription()"
+            [disabled]="
+              loadingId === event?.id ||
+              isPast ||
+              (!event?.isSubscribed && isFull)
+            "
+          >
+            {{ event?.isSubscribed ? 'Cancelar inscrição' : 'Inscrever-se' }}
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            fill="outline"
+            (click)="back()">
+            Voltar
+          </ion-button>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #notFound>
+    <div class="content-wrapper">
+      <p>Evento não encontrado.</p>
+      <ion-button expand="block" (click)="back()">Voltar</ion-button>
+    </div>
+  </ng-template>
+
+</ion-content>

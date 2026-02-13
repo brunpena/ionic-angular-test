@@ -1,0 +1,115 @@
+.event-card {
+  position: relative;
+  background: #1c1c1e;
+  border-radius: 16px;
+  padding: 18px;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.05);
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  transition: 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+}
+
+/* HEADER */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.category {
+  margin-top: 6px;
+  font-size: 12px;
+  background: rgba(255,255,255,0.08);
+  padding: 4px 10px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+/* INFO */
+.info {
+  margin-top: 18px;
+}
+
+.meta {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.capacity {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* BADGES */
+.badges {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+}
+
+.badge {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.badge.full {
+  background: #ff3b30;
+}
+
+.badge.past {
+  background: #8e8e93;
+}
+
+/* STATES */
+.event-card.past {
+  opacity: 0.6;
+  filter: grayscale(1);
+}
+
+.event-card.subscribed {
+  border: 1px solid #34c759;
+}
+
+/* BORDA POR CAPACIDADE */
+.event-card.low {
+  border: 2px solid #34c759; // verde
+}
+
+.event-card.medium {
+  border: 2px solid #ffcc00; // amarelo
+}
+
+.event-card.full {
+  border: 2px solid #ff3b30; // vermelho
+}
+
+/* Se estiver cheio, deixa mais escuro */
+.event-card.full {
+  background: #2a1a1a;
+}

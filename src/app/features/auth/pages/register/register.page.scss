@@ -1,0 +1,103 @@
+ion-content {
+  --background: radial-gradient(circle at top, #1a0026, #050008);
+}
+
+.register-container {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-wrapper {
+  width: 100%;
+  max-width: 420px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  padding: 28px;
+  margin: 0 auto;
+}
+
+
+.register-wrapper {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+
+  padding: 28px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* TITLES */
+
+.register-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  color: #a0a0b8;
+  margin-bottom: 8px;
+}
+
+/* INPUTS */
+
+ion-item {
+  --background: rgba(255,255,255,0.04);
+  --border-radius: 14px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* BUTTON */
+
+.register-btn {
+  margin-top: 12px;
+
+  --background: linear-gradient(135deg, #7a00ff, #b100ff);
+  --border-radius: 14px;
+
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  box-shadow: 0 6px 18px rgba(138,0,255,0.5);
+
+  transition: transform 0.15s ease;
+}
+
+.register-btn:active {
+  transform: scale(0.97);
+}
+
+/* FOOTER */
+
+.register-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #999;
+}
+
+.register-footer a {
+  color: #b100ff;
+  font-weight: 600;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+/* ERROR */
+
+ion-text {
+  text-align: center;
+  font-size: 13px;
+}

@@ -1,0 +1,42 @@
+<ion-header translucent="true">
+  <ion-toolbar class="app-header">
+
+    <div class="header-inner">
+
+      <!-- LOGO + TÍTULO CLICÁVEIS -->
+      <div class="left clickable" (click)="goHome()">
+
+        <div class="logo"></div>
+
+        <div class="titles">
+          <div class="title">{{ title }}</div>
+          <div class="subtitle">Gestão de eventos</div>
+        </div>
+
+      </div>
+
+      <!-- BOTÕES À DIREITA -->
+      <ion-buttons slot="end">
+
+        <!-- Profile -->
+        <ion-button
+          fill="clear"
+          title="Meu perfil"
+          (click)="goToProfile()">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </ion-button>
+
+        <!-- Logout -->
+        <ion-button
+          fill="clear"
+          title="Sair"
+          (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </ion-button>
+
+      </ion-buttons>
+
+    </div>
+
+  </ion-toolbar>
+</ion-header>

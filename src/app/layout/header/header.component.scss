@@ -1,0 +1,206 @@
+.app-header {
+  --background: linear-gradient(
+    135deg,
+    rgba(26, 0, 38, 0.85),
+    rgba(42, 0, 63, 0.85)
+  );
+  --border-width: 0;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 1000;
+}
+
+/* ================================
+   HEADER
+================================ */
+
+ion-toolbar.app-header {
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 14px;
+}
+
+/* ───────── LADO ESQUERDO ───────── */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Logo */
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #7a00ff,
+    #b100ff
+  );
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 22px rgba(138, 0, 255, 0.55);
+
+  position: relative;
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 16px;
+  background: radial-gradient(
+    circle,
+    rgba(177, 0, 255, 0.35),
+    transparent 70%
+  );
+  z-index: -1;
+}
+
+/* Textos */
+.titles .title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+}
+
+.titles .subtitle {
+  font-size: 11px;
+  color: #cdbaff;
+  opacity: 0.9;
+}
+
+/* ───────── BOTÕES ───────── */
+ion-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 4px;
+}
+
+ion-button {
+  --color: #d6c2ff;
+  --padding-start: 10px;
+  --padding-end: 10px;
+
+  height: 38px;
+  border-radius: 12px;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* Hover padrão → BORDA ENTRE ELES */
+ion-button:not(.btn-create-event):hover {
+  --color: #ffffff;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.25);
+
+  transform: translateY(-1px);
+}
+
+/* Ícones */
+ion-icon {
+  font-size: 22px;
+}
+
+/* ───────── BOTÃO CRIAR EVENTO (DESTAQUE) ───────── */
+ion-button.btn-create-event {
+  --color: #f1e8ff;
+  --padding-start: 14px;
+  --padding-end: 16px;
+
+  height: 40px;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(122, 0, 255, 0.35),
+    rgba(177, 0, 255, 0.35)
+  );
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 6px 18px rgba(138, 0, 255, 0.55);
+
+  transform: none;
+}
+
+/* Ícone */
+ion-button.btn-create-event ion-icon {
+  font-size: 20px;
+}
+
+/* Texto */
+ion-button.btn-create-event span {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+/* Hover CTA → MAIS FORTE */
+ion-button.btn-create-event:hover {
+  transform: translateY(-2px) scale(1.04);
+
+  background: linear-gradient(
+    135deg,
+    rgba(122, 0, 255, 0.6),
+    rgba(177, 0, 255, 0.6)
+  );
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.22),
+    0 12px 28px rgba(138, 0, 255, 0.75);
+}
+
+/* ───────── LOGOUT ───────── */
+ion-button[title="Sair"] {
+  --color: #ffb4b4;
+}
+
+ion-button[title="Sair"]:hover {
+  --color: #ffdddd;
+
+  background: rgba(255, 60, 60, 0.12);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 120, 120, 0.25),
+    0 6px 14px rgba(255, 60, 60, 0.25);
+}

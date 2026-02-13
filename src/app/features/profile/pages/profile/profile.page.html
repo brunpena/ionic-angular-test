@@ -1,0 +1,44 @@
+<ion-content fullscreen>
+
+  <div class="page-wrapper">
+
+    <h2>Meu Perfil</h2>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!loading && user">
+
+      <ion-item>
+        <ion-label position="stacked">Nome</ion-label>
+        <ion-input [(ngModel)]="user.name" name="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input [value]="user.email" disabled></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Cidade</ion-label>
+        <ion-input [(ngModel)]="user.city" name="city"></ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        color="primary"
+        (click)="save()"
+        [disabled]="saving"
+      >
+        <ion-spinner *ngIf="saving" name="lines-small"></ion-spinner>
+        <span *ngIf="!saving">Salvar alterações</span>
+      </ion-button>
+
+    </form>
+
+  </div>
+
+</ion-content>

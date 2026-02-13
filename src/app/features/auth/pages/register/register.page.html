@@ -1,0 +1,99 @@
+<ion-content fullscreen>
+
+  <div class="register-container">
+
+    <form
+      class="register-wrapper"
+      [formGroup]="form"
+      (ngSubmit)="register()"
+    >
+
+      <div class="register-title">
+        Criar conta ✨
+      </div>
+
+      <div class="register-subtitle">
+        Comece a gerenciar seus eventos agora
+      </div>
+
+      <!-- NAME -->
+      <ion-item
+        lines="none"
+        [class.ion-invalid]="form.controls.name.invalid && form.controls.name.touched"
+      >
+        <ion-label position="floating">Nome</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
+
+      <ion-text color="danger" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+        <small *ngIf="form.controls.name.errors?.['required']">
+          Nome é obrigatório
+        </small>
+        <small *ngIf="form.controls.name.errors?.['minlength']">
+          Nome muito curto
+        </small>
+      </ion-text>
+
+
+      <!-- EMAIL -->
+      <ion-item lines="none">
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <!-- PASSWORD -->
+      <ion-item lines="none">
+        <ion-label position="floating">Senha</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+
+      <!-- CONFIRM PASSWORD -->
+      <ion-item lines="none">
+        <ion-label position="floating">Confirmar senha</ion-label>
+        <ion-input
+          type="password"
+          formControlName="confirmPassword">
+        </ion-input>
+      </ion-item>
+
+      <!-- CITY -->
+      <ion-item
+        lines="none"
+        [class.ion-invalid]="form.controls.city.invalid && form.controls.city.touched"
+      >
+        <ion-label position="floating">Cidade</ion-label>
+        <ion-input type="text" formControlName="city"></ion-input>
+      </ion-item>
+
+      <ion-text color="danger" *ngIf="form.controls.city.touched && form.controls.city.invalid">
+        <small>Cidade é obrigatória</small>
+      </ion-text>
+
+
+      <!-- ERROR -->
+      <ion-text color="danger" *ngIf="errorMsg">
+        {{ errorMsg }}
+      </ion-text>
+
+      <!-- BUTTON -->
+      <ion-button
+        expand="block"
+        class="register-btn"
+        type="submit"
+        [disabled]="loading || form.invalid"
+      >
+
+        <ion-spinner *ngIf="loading"></ion-spinner>
+        <span *ngIf="!loading">Cadastrar</span>
+      </ion-button>
+
+      <div class="register-footer">
+        Já possui conta?
+        <a (click)="goLogin()">Entrar</a>
+      </div>
+
+    </form>
+
+  </div>
+
+</ion-content>

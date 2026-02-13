@@ -1,0 +1,72 @@
+<ion-content class="login-page" fullscreen>
+
+  <div class="login-container">
+    <form
+      [formGroup]="form"
+      class="login-wrapper"
+      (ngSubmit)="login()">
+
+      <div class="login-title">
+        Bem-vindo 👋
+      </div>
+
+      <div class="login-subtitle">
+        Entre para gerenciar seus eventos
+      </div>
+
+      <ion-item
+        lines="none"
+        [class.ion-invalid]="form.controls.email.invalid && form.controls.email.touched"
+      >
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-text color="danger" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        <small *ngIf="form.controls.email.errors?.['required']">
+          Email é obrigatório
+        </small>
+        <small *ngIf="form.controls.email.errors?.['email']">
+          Email inválido
+        </small>
+      </ion-text>
+
+
+      <ion-item
+        lines="none"
+        [class.ion-invalid]="form.controls.password.invalid && form.controls.password.touched"
+      >
+        <ion-label position="floating">Senha</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+
+      <ion-text color="danger" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+        <small *ngIf="form.controls.password.errors?.['required']">
+          Senha é obrigatória
+        </small>
+        <small *ngIf="form.controls.password.errors?.['minlength']">
+          Senha deve ter no mínimo 6 caracteres
+        </small>
+      </ion-text>
+
+
+      <ion-button
+      expand="block"
+      class="login-btn"
+      type="submit"
+      [disabled]="loading || form.invalid">
+
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        <span *ngIf="!loading">Entrar</span>
+
+      </ion-button>
+
+      <div class="login-footer">
+        Não possui conta?
+        <a (click)="goRegister()">Criar conta</a>
+      </div>
+
+    </form>
+  </div>
+
+</ion-content>

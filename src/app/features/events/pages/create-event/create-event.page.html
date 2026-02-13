@@ -1,0 +1,147 @@
+<ion-content fullscreen >
+
+  <form [formGroup]="form" class="page-wrapper">
+
+    <div class="form-card">
+
+      <h2>Criar Evento</h2>
+
+      <!-- BASICO -->
+      <ion-item>
+        <ion-label position="stacked">Título</ion-label>
+        <ion-input formControlName="title"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Descrição</ion-label>
+        <ion-textarea rows="4" formControlName="description"></ion-textarea>
+      </ion-item>
+
+      <div class="image-upload">
+
+        <!-- Input escondido -->
+        <input
+          type="file"
+          #fileInput
+          accept="image/*"
+          capture="environment"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+
+        <!-- Botões -->
+        <ion-button expand="block" (click)="fileInput.click()">
+          Escolher imagem / Tirar foto
+        </ion-button>
+
+        <!-- Área colável -->
+        <div
+          class="paste-zone"
+          (paste)="onPaste($event)"
+        >
+          Ctrl + V para colar imagem aqui
+        </div>
+
+        <!-- Preview -->
+        <img
+          *ngIf="preview"
+          [src]="preview"
+          class="preview-img"
+        />
+
+      </div>
+
+      <!-- DATAS -->
+      <div class="grid-2">
+
+        <ion-item>
+          <ion-label position="stacked">Data início</ion-label>
+          <ion-input
+            placeholder="dd/mm/yyyy"
+            inputmode="numeric"
+            formControlName="startDate">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Data fim</ion-label>
+          <ion-input
+            placeholder="dd/mm/yyyy"
+            inputmode="numeric"
+            formControlName="endDate">
+          </ion-input>
+        </ion-item>
+
+      </div>
+
+      <!-- ENDEREÇO -->
+      <div class="grid-2">
+
+        <ion-item>
+          <ion-label position="stacked">Rua / Local</ion-label>
+          <ion-input formControlName="street"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Número</ion-label>
+          <ion-input type="number" formControlName="number"></ion-input>
+        </ion-item>
+
+      </div>
+
+      <div class="grid-2">
+
+        <ion-item>
+          <ion-label position="stacked">Cidade</ion-label>
+          <ion-input formControlName="city"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Estado</ion-label>
+          <ion-input formControlName="state"></ion-input>
+        </ion-item>
+
+      </div>
+
+      <!-- META -->
+      <div class="grid-2">
+
+        <ion-select formControlName="category">
+
+          <ion-select-option
+            *ngFor="let cat of categories"
+            [value]="cat.value">
+
+            {{ cat.label }}
+
+          </ion-select-option>
+
+        </ion-select>
+
+        <ion-item>
+          <ion-label position="stacked">Lotação</ion-label>
+          <ion-input
+            type="number"
+            formControlName="maxCapacity">
+          </ion-input>
+        </ion-item>
+
+      </div>
+
+      <ion-button
+        expand="block"
+        size="large"
+        class="btn-create"
+        (click)="create()"
+        [disabled]="loading">
+
+        <ion-spinner *ngIf="loading"></ion-spinner>
+        <span *ngIf="!loading">Criar Evento</span>
+
+      </ion-button>
+
+    </div>
+
+  </form>
+
+</ion-content>

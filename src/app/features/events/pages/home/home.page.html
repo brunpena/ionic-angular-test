@@ -1,0 +1,95 @@
+<ion-content fullscreen>
+
+  <!-- PULL TO REFRESH -->
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="ion-padding">
+
+    <div class="action-buttons">
+
+      <ion-button expand="block" (click)="goToMyEvents()">
+        Meus Eventos
+      </ion-button>
+
+      <ion-button
+        expand="block"
+        class="btn-create-event"
+        (click)="goToCreateEvent()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <span>Criar evento</span>
+      </ion-button>
+
+    </div>
+
+    <ion-searchbar
+      placeholder="Buscar eventos"
+      debounce="400"
+      (ionInput)="onSearch($event)">
+    </ion-searchbar>
+
+    <!-- FILTROS -->
+    <div class="filters">
+
+      <!-- INTERVALO DE DATA -->
+      <div class="date-filters">
+
+        <div class="date-field">
+          <span>Data início</span>
+          <input
+            type="text"
+            placeholder="dd/mm/yyyy"
+            [(ngModel)]="dateFrom"
+            (change)="applyFilters(true)" />
+        </div>
+
+        <div class="date-field">
+          <span>Data fim</span>
+          <input
+            type="text"
+            placeholder="dd/mm/yyyy"
+            [(ngModel)]="dateTo"
+            (change)="applyFilters(true)" />
+        </div>
+
+      </div>
+
+      <!-- CATEGORIA -->
+      <ion-select
+        placeholder="Todas"
+        interface="popover"
+        [(ngModel)]="category"
+        (ionChange)="applyFilters(true)">
+
+        <ion-select-option value="">Todas</ion-select-option>
+        <ion-select-option value="Tecnologia">Tecnologia</ion-select-option>
+        <ion-select-option value="Arte">Arte</ion-select-option>
+        <ion-select-option value="Moda">Moda</ion-select-option>
+
+      </ion-select>
+
+    </div>
+
+    <!-- LISTA -->
+    <div class="cards">
+      <app-event-card
+        *ngFor="let event of visibleEvents"
+        [event]="event"
+        [subscribed]="event.isSubscribed"
+        [loadingId]="loadingId"
+        (subscribeToggle)="toggleSubscription($event)"
+        (open)="openEvent($event)"
+      >
+      </app-event-card>
+    </div>
+
+    <ion-infinite-scroll (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content
+        loadingText="Carregando eventos...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+  </div>
+
+</ion-content>

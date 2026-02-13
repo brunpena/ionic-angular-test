@@ -1,0 +1,102 @@
+<ion-content fullscreen class="my-events-content">
+
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-wrapper">
+
+    <h2>Meus Eventos</h2>
+
+    <!-- Segmento Próximos / Passados -->
+    <ion-segment
+      [(ngModel)]="segment"
+      class="segment-custom"
+      (ionChange)="segmentChanged()"
+    >
+      <ion-segment-button value="upcoming">Próximos</ion-segment-button>
+      <ion-segment-button value="past">Passados</ion-segment-button>
+    </ion-segment>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <!-- Nenhum evento -->
+    <p *ngIf="!loading && filteredEvents.length === 0" class="no-events">
+      Nenhum evento nesta categoria.
+    </p>
+
+    <!-- Grid de eventos -->
+    <div *ngIf="!loading && filteredEvents.length > 0" class="events-grid">
+
+      <ion-card
+        *ngFor="let event of filteredEvents"
+        class="event-card"
+        (click)="openEvent(event.id)"
+      >
+
+        <!-- Imagem -->
+        <img
+          *ngIf="event.imageUrl"
+          [src]="event.imageUrl"
+          class="event-img"
+        />
+
+        <div *ngIf="!event.imageUrl" class="no-image">
+          Sem imagem
+        </div>
+
+        <ion-card-header>
+          <ion-card-title>{{ event.title }}</ion-card-title>
+          <ion-card-subtitle>
+            {{ event.city }} • {{ event.startDate | date:'shortDate' }}
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <p class="event-desc">{{ event.description }}</p>
+
+          <div class="event-info">
+            <span><strong>Local:</strong> {{ event.location }}</span>
+            <span><strong>Categoria:</strong> {{ event.category }}</span>
+            <span><strong>Capacidade:</strong> {{ event.maxCapacity }}</span>
+            <span>
+              <strong>Inscritos:</strong>
+              {{ event.subscribersCount ?? 0 }}
+            </span>
+          </div>
+
+          <div class="event-footer">
+            <ion-button
+              *ngIf="canCancel(event)"
+              size="small"
+              color="danger"
+              fill="outline"
+              (click)="cancelSubscription(event, $event)"
+            >
+              Cancelar
+            </ion-button>
+
+            <span *ngIf="event.cancelledAt" class="cancelled-label">
+              Cancelado
+            </span>
+          </div>
+
+        </ion-card-content>
+      </ion-card>
+
+    </div>
+  </div>
+</ion-content>
+
+<!-- Footer fixo -->
+<ion-footer class="footer-fixed">
+  <ion-toolbar>
+    <ion-button expand="block" (click)="goBack()">
+      Voltar ao Menu
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

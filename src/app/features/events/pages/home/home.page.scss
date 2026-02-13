@@ -1,0 +1,173 @@
+/* ================================
+   FUNDO
+================================ */
+ion-content {
+  --background: #0e0e11;
+}
+
+ion-content::part(scroll) {
+  padding-top: 64px; // altura do seu header
+}
+
+/* ================================
+   BOTÕES DE AÇÃO
+================================ */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .action-buttons {
+    flex-direction: row;
+  }
+
+  .action-buttons ion-button {
+    flex: 1;
+  }
+}
+
+.btn-create-event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  --background: linear-gradient(135deg, #8b5cff, #6f4cff);
+  --border-radius: 18px;
+  font-weight: 600;
+}
+
+/* ================================
+   FILTROS
+================================ */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.date-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+
+/* ================================
+   GRID DE DATAS
+================================ */
+.date-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ================================
+   CAMPO DE DATA (CUSTOM)
+================================ */
+.date-field {
+  background: #1a1a1f;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-field span {
+  font-size: 12px;
+  color: #9a9aa1;
+}
+
+.date-field input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.date-field input::placeholder {
+  color: #6f6f78;
+}
+
+/* ================================
+   SEARCHBAR
+================================ */
+ion-searchbar {
+  --background: #1a1a1f;
+  --color: #ffffff;
+  --placeholder-color: #9a9aa1;
+  --icon-color: #8b5cff;
+  --clear-button-color: #8b5cff;
+
+  border-radius: 16px;
+  margin-top: 12px;
+}
+
+/* ================================
+   SELECT
+================================ */
+ion-select {
+  background: #1a1a1f;
+  border-radius: 14px;
+  padding: 14px;
+  color: white;
+
+  --placeholder-color: #9a9aa1;
+  --highlight-color-focused: #8b5cff;
+  --highlight-color-valid: #8b5cff;
+}
+
+/* POPUP */
+ion-popover {
+  --background: #1a1a1f;
+}
+
+ion-popover ion-label {
+  color: #ffffff;
+}
+
+/* ================================
+   BOTÕES
+================================ */
+ion-button {
+  --background: linear-gradient(135deg, #8b5cff, #6f4cff);
+  --background-activated: #6f4cff;
+  --border-radius: 18px;
+  font-weight: 600;
+}
+
+/* Destaque criar evento */
+.btn-create-event {
+  --background: linear-gradient(135deg, #7a00ff, #b100ff);
+  box-shadow: 0 6px 18px rgba(138, 0, 255, 0.45);
+}
+
+/* ================================
+   LISTA DE CARDS
+================================ */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* ================================
+   INFINITE / REFRESH
+================================ */
+ion-infinite-scroll-content,
+ion-refresher-content {
+  --color: #8b5cff;
+}

@@ -1,0 +1,45 @@
+ion-content {
+  --background: #0e0e11;
+}
+
+ion-content::part(scroll) {
+  padding-top: 64px; // altura do seu header
+}
+
+.page-wrapper {
+  padding: 20px;
+  color: #fff;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+ion-item {
+  --background: #1e1e1e;
+  --color: #fff;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+
+ion-label {
+  color: #bbb;
+}
+
+ion-input {
+  color: #fff;
+}
+
+ion-button {
+  margin-top: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
