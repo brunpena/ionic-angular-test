@@ -8,6 +8,7 @@
     "start": "ionic serve",
     "build": "ionic build",
     "watch": "ionic build --watch",
+    "deploy": "ionic build --prod && firebase deploy",
     "test": "ng test",
     "lint": "ng lint"
   },
