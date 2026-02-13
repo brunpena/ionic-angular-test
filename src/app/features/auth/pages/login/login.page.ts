@@ -12,12 +12,10 @@ import {
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
-
-import { HeaderComponent } from '../../../../layout/header/header.component';
-import { AuthService } from '../../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { PushService } from 'src/app/features/push.service';
 
+import { AuthService } from '../../../../core/services/auth.service';
+import { PushService } from 'src/app/features/push.service';
 
 @Component({
   standalone: true,
@@ -54,35 +52,56 @@ export class LoginPage {
   ) {}
 
   login() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+    // 🔒 bloqueia múltiplos submits
+    if (this.loading) return;
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    this.errorMsg = '';
+
+    const payload = this.form.getRawValue();
+
+    this.auth.login(payload as any)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: async () => {
+          try {
+            // Push NÃO pode quebrar login
+            await this.push.init();
+          } catch (err) {
+            console.warn('[Push] Erro ignorado no login', err);
+          }
+
+          this.router.navigateByUrl('/home', { replaceUrl: true });
+        },
+
+        error: (err: any) => {
+          // 🌐 erro de rede / CORS / backend off
+          if (err?.status === 0) {
+            this.errorMsg = 'Não foi possível conectar ao servidor.';
+            return;
+          }
+
+          // 🔐 credenciais inválidas
+          if (err?.status === 401) {
+            this.errorMsg = 'Email ou senha incorretos.';
+            return;
+          }
+
+          // ⚠️ fallback seguro
+          this.errorMsg =
+            err?.error?.message ||
+            'Falha ao realizar login. Tente novamente.';
+        }
+      });
   }
 
-  this.loading = true;
-  this.errorMsg = '';
-
-  this.auth.login(this.form.value as any)
-    .pipe(finalize(() => this.loading = false))
-    .subscribe({
-      next: async () => {
-        try {
-          // 🔔 inicia push APÓS login
-          await this.push.init();
-        } catch (err) {
-          console.warn('[Push] Falha ao inicializar', err);
-          // não bloqueia login por causa de push
-        }
-
-        this.router.navigateByUrl('/home');
-      },
-      error: (err: any) => {
-        this.errorMsg = err?.error?.message || 'Falha no login';
-      }
-    });
-}
-
   goRegister() {
+    if (this.loading) return;
     this.router.navigateByUrl('/auth/register');
   }
 }

@@ -4,7 +4,7 @@ import { SubscriptionsService } from 'src/app/core/services/subscriptions.servic
 import { EventsService } from 'src/app/core/services/events.service';
 import { EventModel } from 'src/app/shared/models/event.model';
 import { ToastController, IonicModule } from '@ionic/angular';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,13 +13,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './my-events.page.html',
   styleUrls: ['./my-events.page.scss'],
   imports: [IonicModule, CommonModule, FormsModule],
-  providers: [DatePipe]
 })
 export class MyEventsPage implements OnInit {
 
   events: EventModel[] = [];
   loading = false;
-  segment: 'upcoming' | 'past' = 'upcoming';
+
+  segment: 'subscribed' | 'past' = 'subscribed';
 
   constructor(
     private router: Router,
@@ -29,41 +29,70 @@ export class MyEventsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadSubscriptions();
+    this.loadEvents();
   }
+
+  /** ========= CARREGAMENTO ========= */
+
+  loadEvents() {
+    this.loading = true;
+
+    if (this.segment === 'subscribed') {
+      this.loadSubscribedEvents();
+    } else {
+      this.loadPastEvents();
+    }
+  }
+
+  /** ========= INSCRITOS ========= */
+
+  private loadSubscribedEvents() {
+    const now = new Date();
+
+    this.eventsSvc.list().subscribe({
+      next: res => {
+        this.events = res.data.filter(event =>
+          event.isSubscribed &&
+          new Date(event.startDate) >= now
+        );
+        this.loading = false;
+      },
+      error: () => (this.loading = false),
+    });
+  }
+
+  /** ========= PASSADOS ========= */
+
+  private loadPastEvents() {
+    this.subscriptionsSvc.pastSubscriptions().subscribe({
+      next: (subscriptions: any[]) => {
+        this.events = subscriptions
+          .filter(s => s.event)
+          .map(s => ({
+            ...s.event,
+            cancelledAt: s.cancelledAt,
+            subscribersCount: s.event.subscriptions?.length ?? 0,
+            isSubscribed: false,
+          }));
+
+        this.loading = false;
+      },
+      error: () => (this.loading = false),
+    });
+  }
+
+  /** ========= UI ========= */
 
   get filteredEvents(): EventModel[] {
     return this.events;
   }
 
-  loadSubscriptions() {
-    this.loading = true;
-
-    if (this.segment === 'upcoming') {
-      // Próximos eventos inscritos
-      this.eventsSvc.list().subscribe(allEvents => {
-        this.events = allEvents.data.filter(e => e.isSubscribed);
-        this.loading = false;
-      });
-    } else {
-      // Eventos passados do usuário
-      this.subscriptionsSvc.pastSubscriptions().subscribe((subscriptions: any[]) => {
-        this.events = subscriptions
-          .filter(s => s.event) // segurança extra
-          .map(s => ({
-            ...s.event,
-            cancelledAt: s.cancelledAt,
-            subscribersCount: s.event.subscriptions?.length || 0,
-            isSubscribed: false
-          }));
-
-        this.loading = false;
-      });
-    }
+  segmentChanged() {
+    this.loadEvents();
   }
 
   refresh(ev: any) {
-    this.loadSubscriptions();
+    this.loadEvents();
     setTimeout(() => ev.target.complete(), 600);
   }
 
@@ -72,11 +101,13 @@ export class MyEventsPage implements OnInit {
   }
 
   canCancel(event: EventModel): boolean {
-    return this.segment === 'upcoming' && new Date(event.startDate) > new Date();
+    return this.segment === 'subscribed' &&
+           new Date(event.startDate) > new Date();
   }
 
   cancelSubscription(event: EventModel, ev: Event) {
     ev.stopPropagation();
+
     this.subscriptionsSvc.cancel(event.id).subscribe(async () => {
       this.events = this.events.filter(e => e.id !== event.id);
 
@@ -84,17 +115,14 @@ export class MyEventsPage implements OnInit {
         message: `Inscrição em "${event.title}" cancelada.`,
         duration: 2000,
         color: 'danger',
-        position: 'top'
+        position: 'top',
       });
+
       await toast.present();
     });
   }
 
-  segmentChanged() {
-    this.loadSubscriptions();
-  }
-
   goBack() {
-    this.router.navigateByUrl('/menu'); // ajuste conforme sua rota de menu
+    this.router.navigateByUrl('/menu');
   }
 }

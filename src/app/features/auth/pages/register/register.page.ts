@@ -8,7 +8,6 @@ import {
   IonText,
   IonSpinner
 } from '@ionic/angular/standalone';
-import { PushService } from 'src/app/features/push.service';  
 
 import {
   ReactiveFormsModule,
@@ -23,6 +22,7 @@ import { finalize } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { AuthService } from '../../../../core/services/auth.service';
+import { PushService } from 'src/app/features/push.service';
 
 @Component({
   standalone: true,
@@ -64,26 +64,19 @@ export class RegisterPage {
     private push: PushService
   ) {}
 
-  // =========================
-  // VALIDATOR
-  // =========================
+  // 🔐 validação de senha
   passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
+    const confirm = control.get('confirmPassword')?.value;
 
-    if (!password || !confirmPassword) {
-      return null;
-    }
-
-    return password === confirmPassword
-      ? null
-      : { passwordMismatch: true };
+    if (!password || !confirm) return null;
+    return password === confirm ? null : { passwordMismatch: true };
   }
 
-  // =========================
-  // SUBMIT
-  // =========================
   register() {
+    // 🔒 anti double submit
+    if (this.loading) return;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -92,31 +85,41 @@ export class RegisterPage {
     this.loading = true;
     this.errorMsg = '';
 
-    const { confirmPassword, ...payload } = this.form.value;
+    const { confirmPassword, ...payload } = this.form.getRawValue();
 
     this.auth.register(payload as any)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: async () => {
           try {
-            // 🔔 inicia push após cadastro/login
             await this.push.init();
           } catch (err) {
-            console.warn('[Push] Falha ao inicializar após cadastro', err);
+            console.warn('[Push] Erro ignorado no cadastro', err);
           }
 
-          this.router.navigateByUrl('/home');
+          this.router.navigateByUrl('/home', { replaceUrl: true });
         },
+
         error: (err: any) => {
-          this.errorMsg = err?.error?.message || 'Falha no cadastro';
+          if (err?.status === 0) {
+            this.errorMsg = 'Servidor indisponível no momento.';
+            return;
+          }
+
+          if (err?.status === 409) {
+            this.errorMsg = 'Este email já está cadastrado.';
+            return;
+          }
+
+          this.errorMsg =
+            err?.error?.message ||
+            'Erro ao criar conta. Tente novamente.';
         }
       });
   }
 
-  // =========================
-  // NAV
-  // =========================
   goLogin() {
+    if (this.loading) return;
     this.router.navigateByUrl('/auth/login');
   }
 }
