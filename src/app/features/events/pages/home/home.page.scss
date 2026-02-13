@@ -23,6 +23,11 @@ ion-content::part(scroll) {
   .action-buttons {
     flex-direction: column;
   }
+
+  .action-buttons ion-button {
+    width: 100%; /* garantir que ocupe toda a largura */
+    border-radius: 24px; /* borda arredondada */
+  }
 }
 
 /* Desktop */
@@ -33,17 +38,20 @@ ion-content::part(scroll) {
 
   .action-buttons ion-button {
     flex: 1;
+    border-radius: 24px; /* borda arredondada */
   }
 }
 
+/* Botão criar evento específico */
 .btn-create-event {
   display: flex;
   align-items: center;
   gap: 8px;
 
-  --background: linear-gradient(135deg, #8b5cff, #6f4cff);
-  --border-radius: 18px;
+  --background: linear-gradient(135deg, #7a00ff, #b100ff);
+  --border-radius: 24px; /* borda arredondada */
   font-weight: 600;
+  box-shadow: 0 6px 18px rgba(138, 0, 255, 0.45);
 }
 
 /* ================================
@@ -73,8 +81,15 @@ ion-content::part(scroll) {
 }
 
 /* ================================
-   CAMPO DE DATA (CUSTOM)
+   CAMPO DE DATA (CUSTOM) RESPONSIVO
 ================================ */
+.date-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dois campos lado a lado */
+  gap: 12px; /* espaço entre eles */
+}
+
+/* Campos de data */
 .date-field {
   background: #1a1a1f;
   border-radius: 14px;
@@ -82,6 +97,7 @@ ion-content::part(scroll) {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
 }
 
 .date-field span {
@@ -95,6 +111,7 @@ ion-content::part(scroll) {
   outline: none;
   color: #ffffff;
   font-size: 14px;
+  width: 100%; /* garante que o input ocupe todo o espaço do container */
 }
 
 .date-field input::placeholder {
